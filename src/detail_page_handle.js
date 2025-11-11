@@ -272,6 +272,11 @@ module.exports.handlePlaceDetail = async (options) => {
         gasPrices,
     };
     
+    // Filter: Only push if 100+ reviews AND has phone number
+const hasPhoneNumber = detail.phone && detail.phone.trim() !== '';
+const hasEnoughReviews = detail.reviewsCount >= 100;
+
+if (hasPhoneNumber && hasEnoughReviews) {
     if (oneReviewPerRow) {
         const unwoundResults = [];
         if (detail.reviews.length === 0) {
@@ -286,6 +291,8 @@ module.exports.handlePlaceDetail = async (options) => {
     } else {
         await Apify.pushData(detail);
     }
+}
+
     
     stats.places();
     log.info(`[PLACE]: Place scraped successfully --- ${url}`);
